@@ -35,7 +35,7 @@ public class GuiTriggerSelect extends GuiContainer {
 	private int selectPage;
 	protected EntityPlayer target;
 	protected static final ResourceLocation fguiTex =
-			new ResourceLocation(LittleMaidMobX.DOMAIN, "textures/gui/container/littlemaidtrigger.png");
+			new ResourceLocation(LittleMaidMobX.MOD_ID, "textures/gui/container/littlemaidtrigger.png");
 
 
 	public GuiTriggerSelect(EntityPlayer entityplayer, GuiIFF guiowner) {

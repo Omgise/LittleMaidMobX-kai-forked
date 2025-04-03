@@ -8,6 +8,7 @@ import littleMaidMobX.LittleMaidMobX;
 import littleMaidMobX.entity.EntityLittleMaid;
 import mmmlibx.lib.FileManager;
 import mmmlibx.lib.MMM_ManagerBase;
+import mmmlibx.lib.rewrite.RewritedFileManager;
 
 public class EntityModeManager extends MMM_ManagerBase {
 	public static class EntityPriorityComparator implements Comparator<EntityModeBase> {
@@ -22,7 +23,9 @@ public class EntityModeManager extends MMM_ManagerBase {
 
 	public static void init() {
 		// 特定名称をプリフィックスに持つmodファイをを獲得
-		FileManager.getModFile("EntityMode", prefix);
+		//FileManager.getModFile("EntityMode", prefix);
+
+		RewritedFileManager.searchFile("EntityMode", prefix);
 	}
 	
 	public static void loadEntityMode() {

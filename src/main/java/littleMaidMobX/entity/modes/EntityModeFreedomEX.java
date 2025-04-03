@@ -11,7 +11,6 @@ import littleMaidMobX.config.LittleMaidConfig;
 import littleMaidMobX.entity.EntityLittleMaid;
 import littleMaidMobX.entity.ai.EntityAIHurtByTarget;
 import littleMaidMobX.entity.ai.EntityAINearestAttackableTarget;
-import littleMaidMobX.inventory.InventoryLittleMaid;
 import mmmlibx.lib.MMM_Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAITasks;
@@ -32,7 +31,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import scala.util.Random;
-import SupplySugarMachine.TileEntitySupplySugar;
+import supplysugarmachine.tileentity.TileEntitySupplySugar;
 
 public class EntityModeFreedomEX extends EntityModeBasic {
 	public static final int mmode_FreedomEX = 0x3212;
@@ -326,16 +325,16 @@ public class EntityModeFreedomEX extends EntityModeBasic {
 	private void outputNoneSugarMessage(TileEntitySupplySugar tile, int px, int py, int pz) {
 		if (tile.getSugarSize() != 0) return;
 
-		if(tile.IsOuputNoneSugarMessage == false) {
+		if(!tile.outputEmptySugarMessage) {
 			//tile.renderMarker(px, py, pz);
 			String text = "";
-			if (tile.CustomName.isEmpty()) {
+			if (tile.customName.isEmpty()) {
 				text = "(" + px + ", " + py + ", " + pz + ")の砂糖供給機の中身が空です。";
 			}
 			else {
-				text = tile.CustomName + "の砂糖供給機の中身が空です。";
+				text = tile.customName + "の砂糖供給機の中身が空です。";
 			}
-			tile.IsOuputNoneSugarMessage = true;
+			tile.outputEmptySugarMessage = true;
 			owner.getMaidMasterEntity().addChatMessage(new ChatComponentText(text));
 			/*tile = (TileEntitySupplySugar)owner.worldObj.getTileEntity(chestPosition[chestPositionIndex][0], chestPosition[chestPositionIndex][1], chestPosition[chestPositionIndex][2]);
 			chestPositionIndex = searchNearestChest();
@@ -409,8 +408,8 @@ public class EntityModeFreedomEX extends EntityModeBasic {
 
 	@Override
 	public void init() {
-		;
-	}
+        super.init();
+    }
 
 	private int searchNearestChest() {
 		int minIndex = 0;

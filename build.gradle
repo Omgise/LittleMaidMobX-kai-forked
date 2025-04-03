@@ -36,11 +36,13 @@ minecraft {
     runDir = "run"
 
     runClient {
-        jvmArgs = ['-Dfml.coreMods.load=mmmlibx.lib.multiModel.MMMLoader.MMMCoremod']
+        args("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
+        jvmArgs = ['-Dfml.coreMods.load=littleMaidMobX.tweaker.LittleMaidMobXLoadingPlugin']
     }
 
     runServer {
-        jvmArgs = ['-Dfml.coreMods.load=mmmlibx.lib.multiModel.MMMLoader.MMMCoremod']
+        args("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
+        jvmArgs = ['-Dfml.coreMods.load=littleMaidMobX.tweaker.LittleMaidMobXLoadingPlugin']
     }
 
 }
@@ -80,8 +82,8 @@ def outRefMapFile = "${tasks.compileJava.temporaryDir}/mixins.lmmx.refmap.json"
 jar {
 	manifest {
         attributes 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker'
-		attributes 'FMLCorePlugin': 'mmmlibx.lib.multiModel.MMMLoader.MMMCoremod'
-		attributes 'FMLCorePluginContainsFMLMod': 'mmmlibx.lib.MMMLib'
+		attributes 'FMLCorePlugin': 'littleMaidMobX.tweaker.LittleMaidMobXLoadingPlugin'
+		attributes 'FMLCorePluginContainsFMLMod': true
         attributes 'ForceLoadAsMod': true
 	}
     from outRefMapFile

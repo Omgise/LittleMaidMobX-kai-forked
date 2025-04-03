@@ -110,7 +110,7 @@ public class GuiLittleMaidInventory extends GuiContainer {
     }
 
     protected static final ResourceLocation fguiTex =
-            new ResourceLocation(LittleMaidMobX.DOMAIN, "textures/gui/container/littlemaidinventory.png");
+            new ResourceLocation(LittleMaidMobX.MOD_ID, "textures/gui/container/littlemaidinventory.png");
 
     // Method
     public GuiLittleMaidInventory(EntityPlayer pPlayer, EntityLittleMaid elmaid) {

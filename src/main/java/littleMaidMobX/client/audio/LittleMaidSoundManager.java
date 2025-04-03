@@ -26,6 +26,7 @@ import java.util.zip.ZipInputStream;
 import littleMaidMobX.LittleMaidMobX;
 import mmmlibx.lib.FileManager;
 import mmmlibx.lib.MMMLib;
+import mmmlibx.lib.rewrite.RewritedFileManager;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,7 +57,7 @@ public class LittleMaidSoundManager {
 
     public static void init() {
         // 初期設定
-        soundDir = new File(FileManager.dirMods, "/littleMaidMobX/");
+        soundDir = RewritedFileManager.INSTANCE.fileDir;
         if (!getSoundDir().exists() || !getSoundDir().isDirectory()) {
             if (getSoundDir().mkdirs()) {
                 LittleMaidMobX.debug("Create SoundDir: %s", getSoundDir().toString());
@@ -256,7 +257,7 @@ public class LittleMaidSoundManager {
                 return soundsDefault.get(enumsound.index);
             }
         }
-        return LittleMaidMobX.DOMAIN + ":" + s;
+        return LittleMaidMobX.MOD_ID + ":" + s;
     }
 
     public static void rebuildSoundPack() {
@@ -439,7 +440,8 @@ public class LittleMaidSoundManager {
      * mods 直下のディレクトリとZipを全て検索、ディレクトリ内のZipはチェックしない
      */
     public static boolean loadSoundPackCfg() throws IOException {
-        for (File file : FileManager.dirMods.listFiles()) {
+        for (File file : RewritedFileManager.INSTANCE.fileDir.listFiles()//FileManager.dirMods.listFiles()
+        ) {
             if (file.isDirectory()) {
                 if (searchSoundCfgDir(file)) {
                     soundPackDir = file;
@@ -698,7 +700,7 @@ public class LittleMaidSoundManager {
     }
 
     public static String searchSoundAndWriteFileZip(String output, File dir) throws IOException {
-        Map<String, List<String>> map = new LinkedHashMap<String, List<String>>();
+        Map<String, List<String>> map = new LinkedHashMap<>();
         try {
             FileInputStream fileinputstream = new FileInputStream(dir);
             ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);

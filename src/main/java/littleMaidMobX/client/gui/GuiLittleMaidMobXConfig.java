@@ -16,7 +16,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiLittleMaidMobXConfig extends GuiConfig {
     public GuiLittleMaidMobXConfig(GuiScreen parentScreen) {
-        super(parentScreen, getConfigElements(), LittleMaidMobX.DOMAIN, false, false, "Little Maid Mob Settings");
+        super(parentScreen, getConfigElements(), LittleMaidMobX.MOD_ID, false, false, "Little Maid Mob Settings");
     }
 
     private static List<IConfigElement> getConfigElements()

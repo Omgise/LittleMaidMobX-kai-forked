@@ -5,19 +5,21 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import mmmlibx.lib.multiModel.model.mc162.*;
+import mmmlibx.lib.rewrite.RewritedFileManager;
 
 /**
  * 追加パーツたるスタビライザーを管理する
  */
 public class MMM_StabilizerManager extends MMM_ManagerBase {
 
-	public static final String preFix = "ModelStabilizer";
-	public static Map<String, ModelStabilizerBase> stabilizerList = new TreeMap<String, ModelStabilizerBase>();
+	public static final String PREFIX = "ModelStabilizer";
+	public static Map<String, ModelStabilizerBase> stabilizerList = new TreeMap<>();
 	
 	
 	public static void init() {
 		// 特定名称をプリフィックスに持つmodファイをを獲得
-		FileManager.getModFile("Stabilizer", preFix);
+		//FileManager.getModFile("Stabilizer", preFix);
+		RewritedFileManager.searchFile("Stabilizer", PREFIX);
 	}
 
 	public static void loadStabilizer() {
@@ -26,7 +28,7 @@ public class MMM_StabilizerManager extends MMM_ManagerBase {
 
 	@Override
 	protected String getPreFix() {
-		return preFix;
+		return PREFIX;
 	}
 
 	@Override

@@ -43,8 +43,8 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 
 
 	public MMM_TextureBox() {
-		textures = new HashMap<Integer, ResourceLocation>();
-		armors = new TreeMap<String, Map<Integer, ResourceLocation>>();
+		textures = new HashMap<>();
+		armors = new TreeMap<>();
 		modelHeight = modelWidth = modelYOffset = modelMountedYOffset = 0.0F;
 		contractColor = -1;
 		wildColor = -1;
@@ -68,8 +68,8 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 	public void setModels(String pModelName, ModelMultiBase[] pModels, ModelMultiBase[] pDefModels) {
 		modelName = pModelName;
 		models = pModels == null ? pDefModels : pModels;
-		textureName = (new StringBuilder()).append(packegeName).append("_").append(modelName).toString();
-		isUpdateSize = (models != null && models[0] != null) ? ModelCapsHelper.getCapsValueBoolean(models[0], IModelCaps.caps_isUpdateSize) : false;
+		textureName = packegeName + "_" + modelName;
+		isUpdateSize = models != null && models[0] != null && ModelCapsHelper.getCapsValueBoolean(models[0], IModelCaps.caps_isUpdateSize);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 			m = armors.get("default");
 			if (m == null) {
 //				return null;
-				m = (Map)armors.values().toArray()[0];
+				m = (Map<Integer, ResourceLocation>) armors.values().toArray()[0];
 			}
 		}
 		ResourceLocation ls = null;
@@ -196,18 +196,19 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 	}
 
 	public MMM_TextureBox duplicate() {
-		MMM_TextureBox lbox = new MMM_TextureBox();
-		lbox.textureName = textureName;
-		lbox.packegeName = packegeName;
-		lbox.fileName = fileName;
-		lbox.modelName = modelName;
-		lbox.textureDir = textureDir;
-		lbox.textures = textures;
-		lbox.armors = armors;
-		lbox.models = models;
-		lbox.isUpdateSize = lbox.isUpdateSize;
+		MMM_TextureBox box = new MMM_TextureBox();
+		box.textureName = textureName;
+		box.packegeName = packegeName;
+		box.fileName = fileName;
+		box.modelName = modelName;
+		box.textureDir = textureDir;
+		box.textures = textures;
+		box.armors = armors;
+		box.models = models;
+		box.isUpdateSize = isUpdateSize;
+		//lbox.isUpdateSize = lbox.isUpdateSize;
 		
-		return lbox;
+		return box;
 	}
 
 	public boolean addTexture(int pIndex, String pLocation) {
@@ -234,7 +235,7 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 				if (armors.containsKey(ls)) {
 					lmap = armors.get(ls);
 				} else {
-					lmap = new HashMap<Integer, ResourceLocation>();
+					lmap = new HashMap<>();
 					armors.put(ls, lmap);
 				}
 				lmap.put(pIndex, location);

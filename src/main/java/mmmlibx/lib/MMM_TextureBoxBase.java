@@ -26,7 +26,7 @@ public abstract class MMM_TextureBoxBase {
 	}
 
 	protected int getRandomColor(int pColor, Random pRand) {
-		List<Integer> llist = new ArrayList<Integer>();
+		List<Integer> llist = new ArrayList<>();
 		for (int li = 0; li < 16; li++) {
 			if ((pColor & 0x01) > 0) {
 				llist.add(li);
@@ -34,7 +34,7 @@ public abstract class MMM_TextureBoxBase {
 			pColor = pColor >>> 1;
 		}
 		
-		if (llist.size() > 0) {
+		if (!llist.isEmpty()) {
 			return llist.get(pRand.nextInt(llist.size()));
 		} else {
 			return -1;

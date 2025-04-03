@@ -676,7 +676,7 @@ public class EntityLittleMaid extends EntityTameable implements ITextureEntity {
             // Client
             String s = LittleMaidSoundManager.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
             if (s != null && !s.isEmpty() && !s.startsWith("minecraft:")) {
-                s = LittleMaidMobX.DOMAIN + ":" + s;
+                s = LittleMaidMobX.MOD_ID + ":" + s;
             }
             LittleMaidMobX.debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
             if (s != null && !s.isEmpty()) {
@@ -2484,7 +2484,7 @@ public class EntityLittleMaid extends EntityTameable implements ITextureEntity {
     public void displayGUIMaidInventory(EntityPlayer pEntityPlayer) {
         if (!worldObj.isRemote) {
             GuiCommonHandler.maidServer = this;
-            pEntityPlayer.openGui(LittleMaidMobX.instance, GuiCommonHandler.GUI_ID_INVVENTORY, this.worldObj,
+            pEntityPlayer.openGui(LittleMaidMobX.getInstance(), GuiCommonHandler.GUI_ID_INVVENTORY, this.worldObj,
                     (int) this.posX, (int) this.posY, (int) this.posZ);
         } else {
             GuiCommonHandler.maidClient = this;
@@ -2590,7 +2590,7 @@ public class EntityLittleMaid extends EntityTameable implements ITextureEntity {
                                 // IFFのオープン
                                 //MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
                                 if (worldObj.isRemote) {
-                                    par1EntityPlayer.openGui(LittleMaidMobX.instance,
+                                    par1EntityPlayer.openGui(LittleMaidMobX.getInstance(),
                                             GuiCommonHandler.GUI_ID_IFF,
                                             this.worldObj,
                                             (int) this.posX,

@@ -1,8 +1,6 @@
 package mmmlibx.lib;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.discovery.ASMDataTable;
-import mmmlibx.lib.multiModel.MMMLoader.MMMModContainer;
+import mmmlibx.lib.rewrite.RewritedFileManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,7 +28,7 @@ public abstract class MMM_ManagerBase {
 	}
 
 	protected void load() {
-		for (Entry<String, List<File>> le : FileManager.fileList.entrySet()) {
+		for (Entry<String, List<File>> le : RewritedFileManager.INSTANCE.searchedFiles.entrySet()) {
 			for (File lf : le.getValue()) {
 				loadFile(lf);
 			}
@@ -42,7 +40,7 @@ public abstract class MMM_ManagerBase {
 		for (File lf : pfile.listFiles()) {
 			if (lf.isFile()) {
 				String lname = lf.getName();
-				if (lname.indexOf(getPreFix()) >= 0 && lname.endsWith(".class")) {
+				if (lname.contains(getPreFix()) && lname.endsWith(".class")) {
 					loadClass(MMM_Helper.getRelativePathSimple(baseFile, lf));
 				}
 			} else if (lf.isDirectory()) {

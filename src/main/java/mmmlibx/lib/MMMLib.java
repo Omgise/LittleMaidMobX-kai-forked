@@ -1,15 +1,5 @@
 package mmmlibx.lib;
 
-import java.io.File;
-import java.util.List;
-
-import mmmlibx.lib.guns.GunsBase;
-import mmmlibx.lib.multiModel.MMMLoader.MMMTransformer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.config.Configuration;
-import littleMaidMobX.network.Message;
-import littleMaidMobX.network.Network;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -17,6 +7,16 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
+import littleMaidMobX.network.Message;
+import littleMaidMobX.network.Network;
+import mmmlibx.lib.guns.GunsBase;
+import mmmlibx.lib.rewrite.RewritedFileManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
+import java.util.List;
 
 @Mod(	modid	= "MMMLibX",
 		name	= "MMMLibX",
@@ -51,7 +51,7 @@ public class MMMLib {
 	public void preInit(FMLPreInitializationEvent pEvent) {
 
 		// MMMLibが立ち上がった時点で旧モデル置き換えを開始
-		MMMTransformer.isEnable = true;
+		//MMMTransformer.isEnable = true;
 
 		// コンフィグの解析・設定
 		File configFile = pEvent.getSuggestedConfigurationFile();
@@ -118,11 +118,11 @@ public class MMMLib {
 		GunsBase.initAppend();
 
 		// 旧モデル用変換開始
-		MMMTransformer.isEnable = true;
+		//MMMTransformer.isEnable = true;
 		//MultiModelManager.instance.execute();
 
 		// TODO test
-		List<File> llist = FileManager.getAllmodsFiles(MMMLib.class.getClassLoader(), true);
+		List<File> llist = RewritedFileManager.getAllFiles(MMMLib.class.getClassLoader());//FileManager.getAllmodsFiles(MMMLib.class.getClassLoader(), true);
 		for (File lf : llist) {
 			Debug("targetFiles: %s", lf.getAbsolutePath());
 		}

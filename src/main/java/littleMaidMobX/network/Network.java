@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class Network {
     //このMOD用のSimpleNetworkWrapperを生成。チャンネルの文字列は固有であれば何でも良い。MODIDの利用を推奨。
-    private static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(LittleMaidMobX.DOMAIN);
+    private static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(LittleMaidMobX.MOD_ID);
 
     public static void init() {
         /*IMesssageHandlerクラスとMessageクラスの登録。

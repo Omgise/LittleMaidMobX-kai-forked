@@ -1,5 +1,7 @@
 package mmmlibx.lib;
 
+import littleMaidMobX.LittleMaidMobX;
+import mmmlibx.lib.rewrite.RewritedFileManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,8 +28,8 @@ public abstract class FileLoaderBase {
 	 */
 	public void execute() {
 //		List<File> llist = FileManager.getAllmodsFiles();
-		List<File> llist = FileManager.getAllmodsFiles(getClass().getClassLoader(), true);
-		for (File lf : llist) {
+		List<File> files = RewritedFileManager.getAllFiles(getClass().getClassLoader());//FileManager.getAllmodsFiles(getClass().getClassLoader(), true);
+		for (File lf : files) {
 			String ls = lf.getName();
 			if (isZipLoad() && ls.matches("(.+).(zip|jar)$")) {
 				decodeZip(lf);

@@ -24,6 +24,7 @@ import littleMaidMobX.network.ProxyCommon;
 import mmmlibx.lib.FileManager;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
+import mmmlibx.lib.rewrite.RewritedFileManager;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -39,13 +40,13 @@ import littleMaidMobX.network.Network;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = LittleMaidMobX.DOMAIN,
-        name = LittleMaidMobX.DOMAIN,
+@Mod(modid = LittleMaidMobX.MOD_ID,
+        name = LittleMaidMobX.MOD_ID,
         guiFactory = "littleMaidMobX.client.gui.LittleMaidMobXGuiFactory")
 public class LittleMaidMobX {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    public static final String DOMAIN = "lmmx";
+    public static final String MOD_ID = "lmmx";
 
     public static Achievement ac_Contract;
 
@@ -54,12 +55,16 @@ public class LittleMaidMobX {
             serverSide = "littleMaidMobX.network.ProxyCommon")
     public static ProxyCommon proxy;
 
-    @Instance(DOMAIN)
-    public static LittleMaidMobX instance;
+    @Instance(MOD_ID)
+    private static LittleMaidMobX instance;
 
     public static ItemSpawnEgg spawnEgg;
 
     public static ItemDismissalNotice dismissalNotice;
+
+    public static LittleMaidMobX getInstance(){
+        return instance;
+    }
 
     public static void debug(String text, Object... params) {
         // デバッグメッセージ
@@ -74,12 +79,13 @@ public class LittleMaidMobX {
         LittleMaidConfig.init(event);
         LittleMaidConfig.check();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiCommonHandler());
+
         MMM_TextureManager.instance.init();
         EntityRegistry.registerModEntity(EntityLittleMaid.class, "LittleMaidX", 0, instance, 80, 3, true);
         // アイテム自体は登録しておき、レシピを隠して無効化
         spawnEgg = new ItemSpawnEgg();
-        spawnEgg.setUnlocalizedName(DOMAIN + ":spawn_lmmx_egg");
-        spawnEgg.setTextureName(DOMAIN + ":spawn_lmmx_egg");
+        spawnEgg.setUnlocalizedName(MOD_ID + ":spawn_lmmx_egg");
+        spawnEgg.setTextureName(MOD_ID + ":spawn_lmmx_egg");
         GameRegistry.registerItem(spawnEgg, "spawn_lmmx_egg");
         if (LittleMaidConfig.enableSpawnEggRecipe) {
             // 招喚用レシピを追加
@@ -93,8 +99,8 @@ public class LittleMaidMobX {
         }
         //解雇通知書を追加
         dismissalNotice = new ItemDismissalNotice();
-        dismissalNotice.setUnlocalizedName(DOMAIN + ":dismissal_notice_paper");
-        dismissalNotice.setTextureName(DOMAIN + ":dismissal_notice_paper");
+        dismissalNotice.setUnlocalizedName(MOD_ID + ":dismissal_notice_paper");
+        dismissalNotice.setTextureName(MOD_ID + ":dismissal_notice_paper");
         GameRegistry.registerItem(dismissalNotice, "dismissal_notice_paper");
         GameRegistry.addRecipe(new ItemStack(dismissalNotice, 1), "ppp",
                 "pcp",
@@ -215,7 +221,7 @@ public class LittleMaidMobX {
 
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.modID.equals(LittleMaidMobX.DOMAIN)) {
+        if (event.modID.equals(LittleMaidMobX.MOD_ID)) {
             LittleMaidConfig.sync();
             LittleMaidConfig.save();
         }

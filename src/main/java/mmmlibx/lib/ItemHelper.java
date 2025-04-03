@@ -36,7 +36,7 @@ public class ItemHelper {
 		for(ItemStack stack: maid.maidInventory.mainInventory){
 			if(stack == null) continue;
 			if(isSugar(stack.getItem())){
-				flag = false;
+				flag = true;
 				break;
 			}
 		}
@@ -62,10 +62,10 @@ public class ItemHelper {
 		return ((pItemstack != null) && MMM_Helper.getSmeltingResult(pItemstack) != null);
 	}
 
-	public static boolean isItemExplord(ItemStack pItemstack) {
-		if (pItemstack == null)
+	public static boolean isItemExplord(ItemStack stack) {
+		if (stack == null)
 			return false;
-		Item li = pItemstack.getItem();
-		return (pItemstack != null && li instanceof ItemBlock && Block.getBlockFromItem(li).getMaterial() == Material.tnt);
+		Item item = stack.getItem();
+		return item instanceof ItemBlock && Block.getBlockFromItem(item).getMaterial() == Material.tnt;
 	}
 }

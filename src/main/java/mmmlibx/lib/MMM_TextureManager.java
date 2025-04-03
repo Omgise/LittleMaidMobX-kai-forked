@@ -20,12 +20,16 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import littleMaidMobX.LittleMaidMobX;
 import littleMaidMobX.client.resources.OldZipTexturesLoader;
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
+import mmmlibx.lib.rewrite.ModelManager;
+import mmmlibx.lib.rewrite.RewritedFileManager;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 
@@ -56,7 +60,7 @@ public class MMM_TextureManager {
 	/**
 	 * 旧タイプのファイル名
 	 */
-	protected static String defNames[] = {
+	protected static String[] defNames = {
 		"mob_littlemaid0.png", "mob_littlemaid1.png",
 		"mob_littlemaid2.png", "mob_littlemaid3.png",
 		"mob_littlemaid4.png", "mob_littlemaid5.png",
@@ -76,7 +80,7 @@ public class MMM_TextureManager {
 	/**
 	 * ローカルで保持しているテクスチャパック
 	 */
-	private List<MMM_TextureBox> textures = new ArrayList<>();
+	private final List<MMM_TextureBox> textures = new ArrayList<>();
 	/**
 	 * サーバー側での管理番号を識別するのに使う、クライアント用。
 	 */
@@ -89,7 +93,7 @@ public class MMM_TextureManager {
 	 * Entity毎にデフォルトテクスチャを参照。
 	 * 構築方法はEntityListを参照のこと。
 	 */
-	protected Map<Class, MMM_TextureBox> defaultTextures = new HashMap<>();
+	protected Map<Class<?>, MMM_TextureBox> defaultTextures = new HashMap<>();
 
 	/**
 	 * クライアント側で使う
@@ -120,15 +124,24 @@ public class MMM_TextureManager {
 	public void init() {
 		// 検索対象ファイル名を登録します。
 		// パターンを登録しない場合、独自名称のMODファイル、テクスチャディレクトリ、クラスが読み込まれません。
-		FileManager.getModFile("mmmlibx", "littleMaidMob");
+		/*FileManager.getModFile("mmmlibx", "littleMaidMob");
 		FileManager.getModFile("mmmlibx", "mmmlibx");
-		FileManager.getModFile("mmmlibx", "ModelMulti");
+		FileManager.getModFile("mmmlibx", "ModelMulti");*/
+		RewritedFileManager.searchFile("mmmlibx", "littleMaidMob");
+		RewritedFileManager.searchFile("mmmlibx", "mmmlibx");
+		RewritedFileManager.searchFile("mmmlibx", "ModelMulti");
+
+
 
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/ModelMulti/", "ModelMulti_");
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/littleMaid/", "ModelMulti_");
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/littleMaid/", "ModelLittleMaid_");
 		addSearch("mmmlibx", "/mob/ModelMulti/", "ModelMulti_");
 		addSearch("mmmlibx", "/mob/littleMaid/", "ModelLittleMaid_");
+		if ((boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")){
+		}
+
+
 	}
 
 	protected String[] getSearch(String pName) {
@@ -234,7 +247,8 @@ public class MMM_TextureManager {
 		for (String[] lss : searchPrefix) {
 			MMMLib.Debug("getTexture[%s:%s].", lss[0], lss[1]);
 			// mods
-			for (File lf : FileManager.getFileList(lss[0])) {
+			for (File lf : RewritedFileManager.INSTANCE.searchedFiles.get(lss[0])//FileManager.getFileList(lss[0])
+			) {
 				for (String[] lst : searchPrefix) {
 					boolean lflag;
 					if (lf.isDirectory()) {
@@ -246,6 +260,11 @@ public class MMM_TextureManager {
 					}
 					MMMLib.Debug("getTexture-append-%s-%s.", lf.getName(), lflag ? "done" : "fail");
 				}
+			}
+		}
+		if ((boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")){
+			for (String[] lss : searchPrefix) {
+
 			}
 		}
 
@@ -423,6 +442,25 @@ public class MMM_TextureManager {
 			MMMLib.Debug("Rebuild TextureBoxServer(%d).", textureServer.size());
 		}
 	}
+	public void addModelClass(Class<? extends ModelMultiBase> model, String[] pSearch) {
+		int lfindprefix = model.getName().indexOf(pSearch[2]);
+		if (lfindprefix > -1 && model.getName().endsWith(".class")) {
+			String cn = model.getName().replace(".class", "");
+			String pn = cn.substring(pSearch[2].length() + lfindprefix);
+
+			if (modelMap.containsKey(pn)) return;
+			try {
+				Constructor<? extends ModelMultiBase> constructor = model.getConstructor(float.class);
+				ModelMultiBase skin = constructor.newInstance(0.0f);
+				float[] armorModelsSize = skin.getArmorModelsSize();
+				ModelMultiBase inner = constructor.newInstance(armorModelsSize[0]);
+				ModelMultiBase outer = constructor.newInstance(armorModelsSize[1]);
+				modelMap.put(pn, new ModelMultiBase[]{skin, inner, outer});
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	/**
 	 * 渡された名称を解析してLMM用のモデルクラスかどうかを判定する。
@@ -441,21 +479,21 @@ public class MMM_TextureManager {
 
 			ClassLoader lclassloader = MMMLib.class.getClassLoader();
 			Package lpackage = MMMLib.class.getPackage();
-			Class lclass;
+			Class<ModelMultiBase> lclass;
 			try {
 				if (lpackage != null) {
 //					cn = (new StringBuilder("")).append(".").append(cn).toString();
 					cn = cn.replace("/", ".");
 					System.out.println("MMM_TextureManager.addModelClass : "+cn);
-					lclass = lclassloader.loadClass(cn);
+					lclass = (Class<ModelMultiBase>) lclassloader.loadClass(cn);
 				} else {
-					lclass = Class.forName(cn);
+					lclass = (Class<ModelMultiBase>) Class.forName(cn);
 				}
 				if (!(ModelMultiBase.class).isAssignableFrom(lclass) || Modifier.isAbstract(lclass.getModifiers())) {
 					MMMLib.Debug("getModelClass-fail.");
 					return;
 				}
-				ModelMultiBase mlm[] = new ModelMultiBase[3];
+				ModelMultiBase[] mlm = new ModelMultiBase[3];
 				Constructor<ModelMultiBase> cm = lclass.getConstructor(float.class);
 				mlm[0] = cm.newInstance(0.0F);
 				float[] lsize = mlm[0].getArmorModelsSize();
@@ -792,7 +830,7 @@ public class MMM_TextureManager {
 	public void setDefaultTexture(ITextureEntity pEntity, MMM_TextureBox pBox) {
 		setDefaultTexture(pEntity.getClass(), pBox);
 	}
-	public void setDefaultTexture(Class pEntityClass, MMM_TextureBox pBox) {
+	public void setDefaultTexture(Class<?> pEntityClass, MMM_TextureBox pBox) {
 		defaultTextures.put(pEntityClass, pBox);
 		MMMLib.Debug("appendDefaultTexture:%s(%s)",
 				pEntityClass.getSimpleName(), pBox == null ? "NULL" : pBox.textureName);
@@ -804,7 +842,7 @@ public class MMM_TextureManager {
 	public MMM_TextureBox getDefaultTexture(ITextureEntity pEntity) {
 		return getDefaultTexture(pEntity.getClass());
 	}
-	public MMM_TextureBox getDefaultTexture(Class pEntityClass) {
+	public MMM_TextureBox getDefaultTexture(Class<?> pEntityClass) {
 		if (defaultTextures.containsKey(pEntityClass)) {
 			return defaultTextures.get(pEntityClass);
 		} else {

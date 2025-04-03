@@ -1,16 +1,23 @@
-[
 {
-  "modid": "lmmx",
-  "name": "LittleMaidMobX kai Reforged",
-  "description": "LittleMaidMob adds a (tameable) mob called the Little Maid, who can do a lot of stuff for you!\nModified version by Ramy-LMM, Forked and bugfixed version by Yukkuritaku",
-  "version": "1.7.0",
-  "mcversion": "1.7.10",
-  "url": "https://github.com/Yukkuritaku/LittleMaidMobX-kai-forked",
-  "updateUrl": "",
-  "authors": ["MMM", "Ramy-LMM", "Yukkuritaku"],
-  "credits": "created by MMM",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "lmmx",
+    "name": "LittleMaidMobX kai Reforged",
+    "description": "LittleMaidMob adds a (tamable) mob called the Little Maid, who can do a lot of stuff for you!\nModified version by Ramy-LMM, Forked and bug fix version by Yukkuritaku",
+    "version": "1.7.0",
+    "mcversion": "1.7.10",
+    "url": "https://github.com/Yukkuritaku/LittleMaidMobX-kai-forked",
+    "updateUrl": "",
+    "authorList": ["MMM", "Ramy-LMM", "Yukkuritaku"],
+    "credits": "created by MMM",
+    "logoFile": "",
+    "screenshots": [],
+    "parent": "",
+    "requiredMods": [],
+    "dependencies": [],
+    "dependants": [],
+    "useDependencyInformation": false
+  }]
 }
-]
+
+

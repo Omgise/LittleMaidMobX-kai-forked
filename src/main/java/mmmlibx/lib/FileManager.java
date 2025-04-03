@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import cpw.mods.fml.relauncher.FMLInjectionData;
+import org.apache.logging.log4j.LogManager;
 
 public class FileManager {
 
@@ -22,7 +23,7 @@ public class FileManager {
 //	public static File   minecraftJar	= null;	// minecraft.jarを見に行くのは昔の仕様？
 	public static String assetsDir		= "";	// mods/LittleMaidX/assets
 	public static boolean isDevdir;
-	public static Map<String,List<File>>    fileList = new HashMap<String, List<File>>();
+	public static Map<String,List<File>>    fileList = new HashMap<>();
 
 
 	static {
@@ -31,6 +32,7 @@ public class FileManager {
 		minecraftDir = dirMinecraft.getPath();	// TODO ★
 		dirMods = new File(dirMinecraft, "mods");
 		dirModsVersion = new File(dirMods, (String)lo[4]);
+		LogManager.getLogger().info("dirModsVersion: {}", dirModsVersion);
 		MMMLib.Debug("init FileManager.");
 	}
 
@@ -96,12 +98,12 @@ public class FileManager {
 	}
 	*/
 	public static List<File> getAllmodsFiles(ClassLoader pClassLoader, boolean pFlag) {
-		List<File> llist = new ArrayList<File>();
-		if (pClassLoader instanceof URLClassLoader ) {
+		List<File> llist = new ArrayList<>();
+		if (pClassLoader instanceof URLClassLoader) {
 			for (URL lurl : ((URLClassLoader)pClassLoader).getURLs()) {
 				try {
 					String ls = lurl.toString();
-					if (ls.endsWith("/bin/") || ls.indexOf("/out/production/") != -1 || ls.indexOf("/mods/") > -1) {
+					if (ls.endsWith("/bin/") || ls.contains("/out/production/") || ls.contains("/mods/")) {
 						llist.add(new File(lurl.toURI()));
 					}
 				} catch (Exception e) {
@@ -158,7 +160,7 @@ public class FileManager {
 		MMMLib.Debug("getModFile:[%s]:%s", pname, dirMods.getAbsolutePath());
 		// ファイル・ディレクトリを検索
 		try {
-			List<File> files = new ArrayList<File>();
+			List<File> files = new ArrayList<>();
 			if (dirMods.isDirectory()) {
 				files.addAll(Arrays.asList(dirMods.listFiles()));
 			}
@@ -169,10 +171,10 @@ public class FileManager {
 				files.addAll(Arrays.asList(devMods.listFiles()));
 			}
 
-			if (files.size() > 0) {
+			if (!files.isEmpty()) {
 				MMMLib.Debug("getModFile-get:%d.", files.size());
 				for (File t : files) {
-					if (t.getName().indexOf(pprefix) != -1) {
+					if (t.getName().contains(pprefix)) {
 						if (t.getName().endsWith(".zip") || t.getName().endsWith(".jar")) {
 							llist.add(t);
 							MMMLib.Debug("getModFile-file:%s", t.getName());
