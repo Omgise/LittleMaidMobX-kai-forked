@@ -2711,8 +2711,8 @@ public class EntityLittleMaid extends EntityTameable implements ITextureEntity {
                         if (!worldObj.isRemote) {
                             dropItem(Items.name_tag, 1);
 
-                            if (LittleMaidMobX.ac_Contract != null) {
-                                par1EntityPlayer.triggerAchievement(LittleMaidMobX.ac_Contract);
+                            if (LittleMaidMobX.contract != null) {
+                                par1EntityPlayer.triggerAchievement(LittleMaidMobX.contract);
                             }
                             setContract(true);
                             W_Common.setOwner(this, MMM_Helper.getPlayerName(par1EntityPlayer));

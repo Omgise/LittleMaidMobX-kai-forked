@@ -1,13 +1,9 @@
 package mmmlibx.lib;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,10 +16,8 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import littleMaidMobX.LittleMaidMobX;
 import littleMaidMobX.client.resources.OldZipTexturesLoader;
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
-import mmmlibx.lib.rewrite.ModelManager;
 import mmmlibx.lib.rewrite.RewritedFileManager;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
@@ -561,7 +555,24 @@ public class MMM_TextureManager {
 		if (file == null || file.isDirectory()) {
 			return false;
 		}
-		try {
+		try(ZipInputStream zip = new ZipInputStream(Files.newInputStream(file.toPath()))) {
+			while (true){
+				ZipEntry entry = zip.getNextEntry();
+				if (entry == null){
+					break;
+				}
+				if (entry.getName().endsWith(".class")) {
+					addModelClass(entry.getName(), pSearch);
+				} else {
+					MMMLib.proxy.addTextureToOldZipLoader(entry.getName(), file);
+					addTextureName(entry.getName(), pSearch);
+				}
+			}
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+        }
+		/*try {
 			FileInputStream fileinputstream = new FileInputStream(file);
 			ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
 			ZipEntry zipentry;
@@ -588,8 +599,9 @@ public class MMM_TextureManager {
 		} catch (Exception exception) {
 			MMMLib.Debug("addTextureZip-Exception.");
 			return false;
-		}
-	}
+		}*/
+        return false;
+    }
 
 	/*
 	protected void addTexturesJar(File file, String[] pSearch) {
@@ -659,7 +671,7 @@ public class MMM_TextureManager {
 						int i = s.indexOf(pSearch[1]);
 						if (i > -1) {
 							// 対象はテクスチャディレクトリ
-							OldZipTexturesLoader.keys.put(s.substring(i), file);
+							OldZipTexturesLoader.KEYS.put(s.substring(i), file);
 							addTextureName(s.substring(i), pSearch);
 //							addTextureName(s.substring(i).replace('\\', '/'));
 						}

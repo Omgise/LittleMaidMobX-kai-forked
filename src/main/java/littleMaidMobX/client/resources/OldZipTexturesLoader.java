@@ -18,14 +18,14 @@ import com.google.common.collect.ImmutableSet;
 
 public class OldZipTexturesLoader implements IResourcePack {
 
-	public static final Map<String, File> keys = new HashMap<>();
+	public static final Map<String, File> KEYS = new HashMap<>();
 
 	@Override
 	public InputStream getInputStream(ResourceLocation location) throws IOException {
 		if(resourceExists(location)){
 			String key = location.getResourcePath();
 			if(key.startsWith("/")) key = key.substring(1);
-			File zipFile = keys.get(key);
+			File zipFile = KEYS.get(key);
 			@SuppressWarnings("resource")
 			ZipFile file = new ZipFile(zipFile);
             return file.getInputStream(file.getEntry(key));
@@ -39,8 +39,7 @@ public class OldZipTexturesLoader implements IResourcePack {
 	}
 
 	@Override
-	public IMetadataSection getPackMetadata(IMetadataSerializer serializer,
-		String key) {
+	public IMetadataSection getPackMetadata(IMetadataSerializer serializer, String key) {
 		return null;
 	}
 
@@ -58,7 +57,7 @@ public class OldZipTexturesLoader implements IResourcePack {
 	public boolean resourceExists(ResourceLocation location) {
 		String key = location.getResourcePath();
 		if(key.startsWith("/")) key = key.substring(1);
-		return keys.containsKey(key);
+		return KEYS.containsKey(key);
 	}
 
 }

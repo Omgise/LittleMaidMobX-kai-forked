@@ -16,15 +16,14 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import littleMaidMobX.client.gui.GuiCommonHandler;
 import littleMaidMobX.config.LittleMaidConfig;
 import littleMaidMobX.entity.EntityLittleMaid;
-import littleMaidMobX.entity.modes.IFF;
 import littleMaidMobX.entity.modes.EntityModeManager;
+import littleMaidMobX.entity.modes.IFF;
 import littleMaidMobX.item.ItemDismissalNotice;
 import littleMaidMobX.item.ItemSpawnEgg;
+import littleMaidMobX.network.Network;
 import littleMaidMobX.network.ProxyCommon;
-import mmmlibx.lib.FileManager;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
-import mmmlibx.lib.rewrite.RewritedFileManager;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -36,7 +35,6 @@ import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
-import littleMaidMobX.network.Network;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,7 +46,7 @@ public class LittleMaidMobX {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "lmmx";
 
-    public static Achievement ac_Contract;
+    public static Achievement contract;
 
     @SidedProxy(
             clientSide = "littleMaidMobX.network.ProxyClient",
@@ -75,7 +73,7 @@ public class LittleMaidMobX {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        FileManager.setSrcPath(event.getSourceFile());
+        //FileManager.setSrcPath(event.getSourceFile());
         LittleMaidConfig.init(event);
         LittleMaidConfig.check();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiCommonHandler());
@@ -108,9 +106,9 @@ public class LittleMaidMobX {
                 'p', Items.paper,
                 'c', Items.cake);
 
-        ac_Contract = new Achievement("achievement.contract", "contract", 0, 0, Items.cake, null).initIndependentStat().registerStat();
-        Achievement[] achievements = new Achievement[]{ac_Contract};
-        AchievementPage.registerAchievementPage(new AchievementPage("LittleMaidX", achievements));
+        contract = new Achievement("achievement.contract", "contract", 0, 0, Items.cake, null).initIndependentStat().registerStat();
+        Achievement[] achievements = new Achievement[]{contract};
+        AchievementPage.registerAchievementPage(new AchievementPage("LittleMaidMobX", achievements));
 
         if (MMM_Helper.isClient) {
             // 名称変換テーブル
@@ -129,7 +127,6 @@ public class LittleMaidMobX {
 
         ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(Items.cake), 1, 1, 10));
         ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(spawnEgg), 1, 1, 10));
-        //		Debug("GUID-sneak: %s", LMM_EntityLittleMaid.maidUUIDSneak.toString());
     }
 
 

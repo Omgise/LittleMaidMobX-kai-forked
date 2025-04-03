@@ -13,6 +13,6 @@ public class MMM_ProxyClient extends MMM_ProxyCommon
 
 	@Override
 	public void addTextureToOldZipLoader(String name, File file) {
-		OldZipTexturesLoader.keys.put(name, file);
+		OldZipTexturesLoader.KEYS.put(name, file);
 	}
 }

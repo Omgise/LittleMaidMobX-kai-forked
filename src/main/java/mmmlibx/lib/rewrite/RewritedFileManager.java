@@ -19,7 +19,7 @@ public class RewritedFileManager {
     public final Map<String, List<File>> searchedFiles = new HashMap<>();
 
     private RewritedFileManager(){
-        this.fileDir = new File(((File)FMLInjectionData.data()[6]).getAbsoluteFile(), "littleMaidMobX");
+        this.fileDir = new File(((File)FMLInjectionData.data()[6]).getAbsoluteFile(), "mods/littleMaidMobX");
     }
 
     public static List<File> getAllFiles(ClassLoader loader){
@@ -34,7 +34,7 @@ public class RewritedFileManager {
                         LOGGER.info("URLClassLoader File added, file url: {}", lurl.toString());
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOGGER.warn("Exception", e);
                 }
             }
         }
@@ -48,22 +48,23 @@ public class RewritedFileManager {
 
     public static void searchFile(String id, String filter){
         File mods = new File(((File)FMLInjectionData.data()[6]).getAbsoluteFile(), "mods");
-        List<File> files = INSTANCE.searchedFiles.computeIfAbsent(id, s -> new ArrayList<>());
+        List<File> searchedFiles = INSTANCE.searchedFiles.computeIfAbsent(id, s -> new ArrayList<>());
+        List<File> loadFiles = new ArrayList<>();
         if (INSTANCE.fileDir.isDirectory()){
-            files.addAll(Arrays.asList(INSTANCE.fileDir.listFiles()));
+            loadFiles.addAll(Arrays.asList(INSTANCE.fileDir.listFiles()));
         }
         if (mods.isDirectory()){
-            files.addAll(Arrays.asList(mods.listFiles()));
+            loadFiles.addAll(Arrays.asList(mods.listFiles()));
         }
-        if (!files.isEmpty()){
+        if (!loadFiles.isEmpty()){
             try {
-                files.stream().filter(file -> file.getName().contains(filter))
+                loadFiles.stream().filter(file -> file.getName().contains(filter))
                         .forEach(file -> {
                             if (file.getName().endsWith(".zip") || file.getName().endsWith(".jar")) {
-                                files.add(file);
+                                searchedFiles.add(file);
                                 LOGGER.info("File added: {}", file.toString());
                             } else if (file.isDirectory()) {
-                                files.add(file);
+                                searchedFiles.add(file);
                                 LOGGER.info("Directory added: {}", file.toString());
                             }
                         });

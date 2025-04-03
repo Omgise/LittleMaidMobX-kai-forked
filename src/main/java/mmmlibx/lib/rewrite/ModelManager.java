@@ -86,7 +86,7 @@ public class ModelManager {
                             int i = replacedPath.indexOf(filter.texturePath);
                             if (replacedPath.contains(filter.texturePath)) {
                                 // 対象はテクスチャディレクトリ
-                                OldZipTexturesLoader.keys.put(replacedPath.substring(i), file);
+                                OldZipTexturesLoader.KEYS.put(replacedPath.substring(i), file);
                                 addModelTexture(replacedPath.substring(i), filter);
                             }
                         }
